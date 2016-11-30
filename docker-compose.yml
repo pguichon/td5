@@ -1,0 +1,27 @@
+version: '2'
+services:
+  api_server:
+    build: docker
+    command: ['python', '-W ignore::DeprecationWarning', '-u', 'manage.py', 'runserver', '0.0.0.0:8010', '--settings=settings.settings']
+    volumes:
+      - .:/code
+      - ./static:/static
+      - /tmp:/tmp
+    ports:
+      - "8010:8010"
+    depends_on:
+      - api_db
+    env_file: ./pass.env
+  api_db:
+    build: postgresql
+    env_file: ./pass.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_api:/var/lib/postgresql/data/pgdata
+
+
+
+volumes:
+  pgdata_api:
+    driver: local
