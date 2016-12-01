@@ -19,6 +19,7 @@ from rest_framework import routers
 from api import views
 from rest_framework_swagger.views import get_swagger_view
 from django.contrib.auth.decorators import login_required
+from rest_framework_jwt.views import obtain_jwt_token
 
 router = routers.DefaultRouter()
 router.register(r'post', views.PostView, base_name='post')
@@ -26,7 +27,8 @@ router.register(r'post', views.PostView, base_name='post')
 schema_view = get_swagger_view(title='Services API')
 
 urlpatterns = [
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
-    url(r'^admin/', admin.site.urls),
+    url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^$', login_required(schema_view)),
 ]

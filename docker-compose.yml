@@ -1,5 +1,16 @@
 version: '2'
 services:
+  api_nginx:
+    build: nginx
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+
+    depends_on:
+      - api_server
+    ports:
+      - "80:80"
+    command: ["nginx", "-g", "daemon off;"]
+
   api_server:
     build: docker
     command: ['python', '-W ignore::DeprecationWarning', '-u', 'manage.py', 'runserver', '0.0.0.0:8010', '--settings=settings.settings']
